@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds" debug="true">
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d{HH:mm:ss} [%-5level] [%thread] %logger{36}[line: %L] - %msg%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/log/demo.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/log/demo-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>50</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<Pattern>%d{HH:mm:ss} [%-5level] %logger{36}[line: %L] - %msg%n</Pattern>
+		</encoder>
+	</appender>
+	
+	<!--
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d %5p %m%n</Pattern>
+		</encoder>
+	</appender>
+	-->
+
+	<logger name="com.springboot.demo">
+		<level value="DEBUG"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</logger>
+	
+	<!--
+	<logger name="jdbc.sqlonly" level="debug" appender-ref="CONSOLE" />
+	<logger name="jdbc.resultsettable" level="debug" appender-ref="CONSOLE" />
+	
+	<logger name="jdbc.sqlonly" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</logger>
+	-->
+	
+	<logger name="jdbc" level="OFF"/>
+	
+	<logger name="jdbc.sqlonly" level="OFF"/>
+	
+	<!--
+	<logger name="jdbc.sqlonly">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</logger>
+	-->
+	
+	<!--
+	<logger name="jdbc.sqltiming" level="OFF"/>
+	-->
+	<!-- executed query time -->
+	<logger name="jdbc.sqltiming">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</logger>
+
+	<!-- jdbc call log excluding query result -->
+	<logger name="jdbc.audit" level="OFF"/>
+	<!-- query result -->
+	<logger name="jdbc.resultset" level="OFF"/>
+	<!-- query results as table. -->
+	<logger name="jdbc.resultsettable" level="OFF"/>
+	
+	<!-- logs connection calls -->
+	<logger name="jdbc.connection" level="OFF"/>
+
+	<root>
+		<level value="OFF"/>
+		<!--
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+		-->
+	</root>
+</configuration>

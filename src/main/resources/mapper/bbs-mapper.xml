@@ -1,0 +1,283 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bbsMapper">
+
+	<sql id="sqlColumns">
+	
+		/* sqlColumns start */
+		
+		IDX
+		, SEQ
+		, BBS_CD
+		, TITLE
+		, CONTENT
+		, UPR_SEQ
+		, RD_CNT
+		, DTH
+		, DEL_YN
+		, USR_ID
+		, CRE_DT
+		, CRE_DT_FORMAT_DT
+		, CRE_DT_FORMAT_TM
+		, MOD_DT
+		, MOD_DT_FORMAT_DT
+		, MOD_DT_FORMAT_TM
+		, LST_DT
+		, LST_DT_FORMAT_DT
+		, LST_DT_FORMAT_TM
+		
+		/* sqlColumns end */
+		
+	</sql>
+
+	<sql id="sqlSelectBbs">
+	
+		/* sqlSelectBbs start */
+		
+		SELECT 
+			SEQ
+			, BBS_CD
+			, TITLE
+			, CONTENT
+			, UPR_SEQ
+			, RD_CNT
+			, DTH
+			, DEL_YN
+			, USR_ID
+			, CRE_DT
+			, TO_CHAR(CRE_DT, 'YYYY-MM-DD') 			AS CRE_DT_FORMAT_DT
+			, TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS CRE_DT_FORMAT_TM
+			, MOD_DT
+			, TO_CHAR(MOD_DT, 'YYYY-MM-DD') 			AS MOD_DT_FORMAT_DT
+			, TO_CHAR(MOD_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS MOD_DT_FORMAT_TM
+			, LST_DT
+			, TO_CHAR(LST_DT, 'YYYY-MM-DD') 			AS LST_DT_FORMAT_DT
+			, TO_CHAR(LST_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS LST_DT_FORMAT_TM
+		FROM 
+		(
+			SELECT
+				SEQ
+				, BBS_CD
+				, TITLE
+				, CONTENT
+				, UPR_SEQ
+				, RD_CNT
+				, DTH
+				, DEL_YN
+				, USR_ID
+				, CRE_DT
+				, MOD_DT
+				, NVL(MOD_DT, CRE_DT) AS LST_DT
+			FROM
+				TB_BBS
+		)
+		
+		/* sqlSelectBbs end */
+		
+	</sql>
+	
+	<sql id="sqlVWBbs">
+	
+		/* sql VWBbs start */
+	
+		WITH VW_BBS AS (
+			SELECT
+				ROW_NUMBER() OVER(ORDER BY SEQ) AS IDX
+				, SEQ
+				, BBS_CD
+				, TITLE
+				, CONTENT
+				, UPR_SEQ
+				, RD_CNT
+				, DTH
+				, DEL_YN
+				, USR_ID
+				, CRE_DT
+				, TO_CHAR(CRE_DT, 'YYYY-MM-DD') AS CRE_DT_FORMAT_DT
+				, TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') AS CRE_DT_FORMAT_TM
+				, MOD_DT
+				, TO_CHAR(MOD_DT, 'YYYY-MM-DD') AS MOD_DT_FORMAT_DT
+				, TO_CHAR(MOD_DT, 'YYYY-MM-DD HH24:MI:SS') AS MOD_DT_FORMAT_TM
+				, LST_DT
+				, TO_CHAR(LST_DT, 'YYYY-MM-DD') AS LST_DT_FORMAT_DT
+				, TO_CHAR(LST_DT, 'YYYY-MM-DD HH24:MI:SS') AS LST_DT_FORMAT_TM
+			FROM 
+			(
+				SELECT
+					SEQ
+					, BBS_CD
+					, TITLE
+					, CONTENT
+					, UPR_SEQ
+					, RD_CNT
+					, DTH
+					, DEL_YN
+					, USR_ID
+					, CRE_DT
+					, MOD_DT
+					, NVL(MOD_DT, CRE_DT) AS LST_DT
+				FROM
+					TB_BBS
+				WHERE 1=1
+				AND BBS_CD = 'NONE'
+			)
+		)
+		
+		/* sql VWBbs end */
+	</sql>
+	
+	<sql id="sqlSearch">
+	
+		/* sqlSearch start */
+	
+		<if test="searchText != null and searchText != ''">
+			<if test="searchType != null and searchType != '' and searchType == 'TITLE'">
+				AND TITLE LIKE '%' || #{searchText} || '%'
+			</if>
+			<if test="searchType != null and searchType != '' and searchType == 'CONTENT'">
+				AND TITLE LIKE '%' || #{searchText} || '%'
+			</if>
+		</if>
+		
+		/* sqlSearch end */
+		
+	</sql>
+	
+	<select id="selectBbsListCount" parameterType="com.springboot.demo.dto.BbsPageDto" resultType="Integer">
+	
+		/* selectBbsListCount start */
+		
+		<include refid="sqlVWBbs"></include>
+		
+		SELECT COUNT(*) AS CNT FROM VW_BBS
+		
+		/* selectBbsListCount end */
+		
+	</select>
+		
+	<select id="selectBbsListPaging" parameterType="com.springboot.demo.dto.BbsPageDto" resultType="com.springboot.demo.dto.BbsDto">
+	
+		/* selectBbsListPaging start */
+		
+		<include refid="sqlVWBbs"></include>
+		
+		SELECT
+		
+		<include refid="sqlColumns"></include>
+		
+		FROM VW_BBS
+		
+		WHERE 1 = 1
+
+		AND IDX BETWEEN #{itemStIdx} AND #{itemEdIdx}
+		
+		ORDER BY IDX DESC
+		
+		/* selectBbsListPaging end */
+		
+	</select>
+	
+	<select id="selectBbs" parameterType="java.util.Map" resultType="CamelMap">
+	
+		/* selectBbs start */
+			
+		<include refid="sqlVWBbs"></include>
+		
+		SELECT 
+		
+		<include refid="sqlColumns"></include>
+		
+		FROM VW_BBS
+		
+		WHERE SEQ = #{seq}
+		
+		/* selectBbs end */
+		
+	</select>
+	
+	<select id="selectBbsList" parameterType="java.util.Map" resultType="CamelMap">
+	
+		/* selectBbsList start */
+		
+		<include refid="sqlVWBbs"/>
+		
+		SELECT 
+		
+		<include refid="sqlColumns"/>
+		
+		FROM VW_BBS
+		
+		WHERE 1=1
+		
+		<include refid="sqlSearch"/>
+		
+		ORDER BY IDX DESC
+			
+		/* selectBbsList end */
+		
+	</select>
+	
+	<insert id="insertBbs" parameterType="java.util.Map">
+	
+		/* insertBbs start */
+	
+		INSERT INTO TB_BBS
+		(
+			SEQ
+			
+			<if test="bbsCd != null and bbsCd != ''">
+			, BBS_CD
+			</if>
+			, TITLE
+			, CONTENT
+			<if test="uprSeq != null and uprSeq != ''">
+			, UPR_SEQ
+			</if>
+			<if test="dth != null and dth != ''">
+			, DTH
+			</if>
+			, USR_ID
+			, CRE_DT
+		)
+		VALUES
+		(
+			TB_BBS_SEQ.NEXTVAL
+			<if test="bbsCd != null and bbsCd != ''">
+			, #{bbsCd}
+			</if>
+			, #{title}
+			, #{content}
+			<if test="uprSeq != null and uprSeq != ''">
+			, #{uprSeq}
+			</if>
+			<if test="dth != null and dth != ''">
+			, #{dth}
+			</if>
+			, #{usrId}
+			, SYSDATE
+		)
+		
+		/* insertBbs end */
+		
+	</insert>
+	
+	<insert id="updateBbs" parameterType="java.util.HashMap">
+	
+		/* updateBbs start */
+	
+		UPDATE TB_BBS
+		SET
+			BBS_CD = #{bbsCd}
+			, TITLE = #{title}
+			, CONTENT = #{content}
+			, MOD_DT = SYSDATE
+		WHERE
+			SEQ = #{seq}
+		
+		/* updateBbs end */
+		
+	</insert>
+	
+</mapper>
