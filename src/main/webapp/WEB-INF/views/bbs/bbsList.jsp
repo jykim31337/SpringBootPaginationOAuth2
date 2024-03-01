@@ -103,6 +103,16 @@ $(document).ready(function() {
 						</div>
 					</div>
 					<button id="btnRequest" name="btnRequest" class="btn btn-outline-primary col-2 mx-2" type="button">Request</button>
+					<%--
+					<c:choose>
+						<c:when test="${not empty user}">
+							<button id="btnWrite" name="btnWrite" class="btn btn-outline-primary col-2" type="button">Write</button>
+						</c:when>
+						<c:otherwise>
+							<button id="btnWrite" name="btnWrite" class="btn btn-outline-primary col-2" type="button" disabled>Write</button>
+						</c:otherwise>
+					</c:choose>
+					--%>
 					<button id="btnWrite" name="btnWrite" class="btn btn-outline-primary col-2" type="button">Write</button>
 				</div>
 			</div>

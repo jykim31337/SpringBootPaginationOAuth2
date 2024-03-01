@@ -16,3 +16,44 @@ function uuid() {
 		lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+'-'+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
 		lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
 }
+
+function isNull(str) {
+	if(str == null || str == undefined) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isBlank(str) {
+	if(isNull(str)) {
+		return true;
+	}
+
+	if(str.trim().length == 0) {
+		return true;
+	}
+	
+	return false;
+}
+
+function isValid(ctl) {
+	
+	//console.log(ctl.prop('id'));
+	
+	if(ctl == null || ctl == undefined) {
+		return false;
+	}
+	
+	var str = ctl.val();
+	
+	if(str.trim().length == 0){
+		//CHK_DBG: not work
+		ctl.focus(); 
+		//ctl.prop('tabIndex', 1);
+		//setTimeout(function() {ctl.focus();}, 50);
+		return false;
+	}
+	
+	return true;
+}
