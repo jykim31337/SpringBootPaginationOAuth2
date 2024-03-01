@@ -39,8 +39,6 @@ function isBlank(str) {
 
 function isValid(ctl) {
 	
-	//console.log(ctl.prop('id'));
-	
 	if(ctl == null || ctl == undefined) {
 		return false;
 	}
@@ -48,10 +46,7 @@ function isValid(ctl) {
 	var str = ctl.val();
 	
 	if(str.trim().length == 0){
-		//CHK_DBG: not work
 		ctl.focus(); 
-		//ctl.prop('tabIndex', 1);
-		//setTimeout(function() {ctl.focus();}, 50);
 		return false;
 	}
 	

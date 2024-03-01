@@ -6,46 +6,17 @@
 <meta charset="UTF-8">
 <jsp:include page="../template/common.jsp" />
 
-<%--
-<style>
-/*
-input:focus,
-textarea:focus {
-	border-color: yellow !important;
-	outline: 2px solid red !important;
-	outline-offset: 1px !important;
-}
-*/
-
-.cls-focus {
-	/*
-	border-color: yellow !important;
-	outline: 2px solid red !important;
-	outline-offset: 1px !important;
-	*/
-}
-</style>
---%>
-
 <script type="text/javascript">
 
 var isTest = true;
 
 $(document).ready(function() {
 	
-	if(isTest) {
+	var user = "${user}";
 	
-		//$('#usrId').val(uuid());
-		
-		//$('#title').val(uuid());
-		//$('#content').val(uuid());
-		
-		var user = "${user}";
-		
-		if(user == null || user == '') {
-			var usrId = $('#usrId');
-			usrId.prop("placeholder", "Input Your ID");
-		}
+	if(user == null || user == '') {
+		var usrId = $('#usrId');
+		usrId.prop("placeholder", "Input Your ID");
 	}
 
 	$( "#btnWrite" ).on( "click", function() {
@@ -55,25 +26,7 @@ $(document).ready(function() {
 	$( "#btnCancle" ).on( "click", function() {
 		window.location = "bbsList";
 	} );
-	
-	<%--
-	$('input').on('focus', function(e) {
-		console.log('focus');
-		this.classList.add('cls-focus');
-	});
-	$('input').on('focusout', function(e) {
-		console.log('focusout');
-		this.classList.remove('cls-focus');
-	});
-	$('textarea').on('focus', function(e) {
-		console.log('focus');
-		this.classList.add('cls-focus');
-	});
-	$('textarea').on('focusout', function(e) {
-		console.log('focusout');
-		this.classList.remove('cls-focus');
-	});
-	--%>
+
 });
 
 	function fn_validation() {
