@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.demo.dto.BbsDto;
 import com.springboot.demo.dto.BbsPageDto;
 import com.springboot.demo.dto.OAuth2UserExt;
 import com.springboot.demo.service.BbsService;
@@ -41,24 +43,21 @@ public class BbsController {
 			, @ModelAttribute BbsPageDto bbsPageDto
 			, ModelAndView mav
 			, @AuthenticationPrincipal OAuth2UserExt oAuth2User
-			) {
+			) throws Exception {
 		
 		log.info("bbsList start");
-	
+		
 		mav.setViewName("/bbs/bbsList");
+		mav.addObject("auth", oAuth2User);
 		
 		try {
-			
-			if(oAuth2User != null) {
-				mav.addObject("user", oAuth2User.getUser());
-			}
 			
 			BbsPageDto result = bbsService.selectBbsListPaging(bbsPageDto);
 			
 			mav.addObject("dto", result);
 		} catch(Exception exptn) {
 			log.error("bbsList", exptn);
-			exptn.printStackTrace();
+			throw exptn;
 		}
 		
 		log.info("bbsList end");
@@ -67,25 +66,31 @@ public class BbsController {
 	}
 	
 	@GetMapping("/bbs/bbsWrite")
-	public ModelAndView bbsWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav
+	public ModelAndView bbsWrite(HttpServletRequest request, HttpServletResponse response
+			, ModelAndView mav
 			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) {
 		
 		log.info("bbsWrite start");
 		
 		mav.setViewName("/bbs/bbsDetail");
+		mav.addObject("auth", oAuth2User);
 		
 		try {
+
+			BbsDto bbsDto = new BbsDto();
 			
 			if(oAuth2User != null) {
-				mav.addObject("user", oAuth2User.getUser());
+				bbsDto.setUsrId(oAuth2User.getUser().getEmail());
 			} else {
-				mav.addObject("title", UUID.randomUUID());
-				mav.addObject("content", UUID.randomUUID());
+				bbsDto.setTitle(UUID.randomUUID().toString());
+				bbsDto.setContent(UUID.randomUUID().toString());
 			}
+			
+			mav.addObject("dto", bbsDto);
 			
 		} catch(Exception exptn) {
 			log.error("bbsWrite", exptn);
-			exptn.printStackTrace();
+			throw exptn;
 		}
 		
 		log.info("bbsWrite end");
@@ -94,22 +99,38 @@ public class BbsController {
 	}
 	
 	@GetMapping("/bbs/bbsDetail")
-	public ModelAndView bbsDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav
-			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) {
+	public ModelAndView bbsDetail(HttpServletRequest request, HttpServletResponse response
+			, ModelAndView mav
+			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) throws Exception {
 		
 		log.info("bbsDetail start");
 		
 		mav.setViewName("/bbs/bbsDetail");
+		mav.addObject("auth", oAuth2User);
 		
 		try {
 			
-			if(oAuth2User != null) {
-				mav.addObject("user", oAuth2User.getUser());
+			String seq = request.getParameter("seq");
+			String bbsCd = request.getParameter("bbsCd");
+			
+			if(seq == null) {
+				String errMsg = "seq is null";
+				log.error(errMsg);
+				mav.addObject("errMsg",  errMsg);
+				mav.setViewName("/error");
+				return mav;
 			}
+			
+			BbsPageDto param = new BbsPageDto();
+			param.setSeq(seq);
+			param.setBbsCd(bbsCd);
+			
+			BbsDto bbsDto = bbsService.selectBbs(param);
+			mav.addObject("dto", bbsDto);
 			
 		} catch(Exception exptn) {
 			log.error("bbsDetail", exptn);
-			exptn.printStackTrace();
+			throw exptn;
 		}
 		
 		log.info("bbsDetail end");
@@ -119,8 +140,9 @@ public class BbsController {
 	
 	@ResponseBody
 	@PostMapping(value = "/bbs/bbsSubmit")
-	public Map<String, Object> bbsSubmit(HttpServletRequest request, HttpServletResponse response, @RequestBody List<Map<String, Object>> formData
-			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) {
+	public Map<String, Object> bbsSubmit(HttpServletRequest request, HttpServletResponse response
+			, @RequestBody List<Map<String, Object>> formData
+			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) throws Exception {
 		
 		log.info("bbsSubmit start");
 		
@@ -132,9 +154,13 @@ public class BbsController {
 			
 			HashMap<String, Object> param = cmUtil.cvtFormData(formData);
 			
-			Integer seq = cmUtil.getIntParam(param, "seq");
+			if(oAuth2User != null) {
+				param.put("usrId", oAuth2User.getUser().getEmail());
+			}
 			
-			if(seq == null || seq < 0) {
+			String seq = cmUtil.getParam(param, "seq");
+			
+			if(StringUtils.isBlank(seq)) {
 				qryResult = bbsService.insertBbs(param);
 			} else {
 				qryResult = bbsService.updateBbs(param);
@@ -151,7 +177,7 @@ public class BbsController {
 			
 		} catch(Exception exptn) {
 			log.error("bbsSubmit", exptn);
-			exptn.printStackTrace();
+			throw exptn;
 		}
 		
 		log.info("bbsSubmit end");

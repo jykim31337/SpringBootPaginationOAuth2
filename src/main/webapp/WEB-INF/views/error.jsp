@@ -5,20 +5,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+<script type="text/javascript">
+
+debugger;
+
+</script>
+
 <jsp:include page="./template/common${viewPath}.jsp" />
 
 <script type="text/javascript">
 
+debugger;
+
 $(document).ready(function() {
-	
+	var date = new Date();
+	console.log(date);
 });
 
 </script>
 
-<title>LOGIN PAGE</title>
+<title>ERROR</title>
 </head>
 <body>
-	loginPage.jsp<br>
-	<a href="./oauth2/authorization/google">google login</a><br>	
+	<h1>ERROR</h1>
+	<h1>${errMsg}</h1>
 </body>
 </html>

@@ -20,7 +20,7 @@ $(document).ready(function() {
 </head>
 <body>
 	<a href="./bbs/bbsList">/bbs/bbsList</a><br>
-	<a href="./bbs/bbsDetail">/bbs/bbsDetail</a><br>
+	<a href="./bbs/bbsWrite">/bbs/bbsWrite</a><br>
 	<br>
 	<a href="./admin/manageGet">/admin/manageGet</a><br>
 	<a href="./user/infoGet">/user/infoGet</a><br>

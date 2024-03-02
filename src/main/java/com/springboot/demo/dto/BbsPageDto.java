@@ -4,12 +4,34 @@ import java.util.List;
 
 public class BbsPageDto {
 	
+	/*
 	public enum SearchType {
-		TITLE
-		, CONTENT
-		, ID
-		, NAME
-	}
+		
+		TITLE("TITLE")
+		, CONTENT("CONTENT")
+		, ID("ID")
+		, NAME("NAME");
+
+		private String searchType;
+		
+		SearchType(String searchType) {
+			this.searchType = searchType;
+		}
+
+		public String getSearchType() {
+			return searchType;
+		}
+
+		public void setSearchType(String searchType) {
+			this.searchType = searchType;
+		}
+	}*/
+	
+	private String searchType;
+	private String searchText;
+	
+	private String seq;
+	private String bbsCd = "NONE";
 	
 	private int itemTotCnt;
 	private int itemPerPage = 10;
@@ -24,10 +46,39 @@ public class BbsPageDto {
 	private int naviEdIdx = 5;
 	private int naviLstIdx = Integer.MAX_VALUE;
 	
-	private SearchType searchType = SearchType.TITLE;
-	private String searchText;
-	
 	private List<BbsDto> list;
+
+	public String getSearchType() {
+		return searchType;
+	}
+
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
+	}
+
+	public String getSearchText() {
+		return searchText;
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+	}
+
+	public String getSeq() {
+		return seq;
+	}
+
+	public void setSeq(String seq) {
+		this.seq = seq;
+	}
+
+	public String getBbsCd() {
+		return bbsCd;
+	}
+
+	public void setBbsCd(String bbsCd) {
+		this.bbsCd = bbsCd;
+	}
 
 	public int getItemTotCnt() {
 		return itemTotCnt;
@@ -99,22 +150,6 @@ public class BbsPageDto {
 
 	public void setNaviEdIdx(int naviEdIdx) {
 		this.naviEdIdx = naviEdIdx;
-	}
-
-	public SearchType getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(SearchType searchType) {
-		this.searchType = searchType;
-	}
-
-	public String getSearchText() {
-		return searchText;
-	}
-
-	public void setSearchText(String searchText) {
-		this.searchText = searchText;
 	}
 
 	public List<BbsDto> getList() {

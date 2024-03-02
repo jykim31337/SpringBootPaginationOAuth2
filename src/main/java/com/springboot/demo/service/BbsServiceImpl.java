@@ -47,8 +47,12 @@ public class BbsServiceImpl implements BbsService {
 			/* ex) totalCnt: 102, stIdx: 93, edIdx: 102 */
 			itemTotCnt = bbsDao.selectBbsListCount(param);
 			
-			if(itemTotCnt == null) {
-				throw(new Exception("itemTotCnt == null"));
+			if (itemTotCnt == 0) {
+				param.setNaviStIdx(1);
+				param.setNaviEdIdx(1);
+				param.setNaviIdx(1);
+				param.setNaviLstIdx(1);
+				return param;
 			}
 			
 			itemPerPage = param.getItemPerPage();
@@ -60,48 +64,60 @@ public class BbsServiceImpl implements BbsService {
 			naviStIdx = param.getNaviStIdx();
 			naviEdIdx = param.getNaviEdIdx();
 			
-			if(itemTotCnt % itemPerPage == 0) {
-				naviLstIdx = (int)(itemTotCnt / itemPerPage);
+			int itemStIdx = 0; 
+			int itemEdIdx = 0;
+					
+			if(itemTotCnt <= itemPerPage) {
+				naviIdx = 1;
+				naviStIdx = 1;
+				naviEdIdx = 1;
+				naviLstIdx = 1;
+				
+				itemStIdx = 1;
+				itemEdIdx = itemTotCnt;
 			} else {
-				naviLstIdx = (int)(itemTotCnt / itemPerPage) + 1;
-			}
-			
-			int itemStIdx = itemTotCnt - (naviIdx * itemPerPage) + 1;
-			int itemEdIdx = itemTotCnt - ((naviIdx - 1) * itemPerPage);
-			
-			param.setItemTotCnt(itemTotCnt);
-			param.setNaviLstIdx(naviLstIdx);
-			param.setItemStIdx(itemStIdx);
-			param.setItemEdIdx(itemEdIdx);
-			
-			if(naviIdx < naviStIdx) {
-				System.out.println("naviIdx too small");
-				
-				while(naviIdx < naviStIdx) {
-					naviStIdx = naviStIdx - naviSize;
+				if(itemTotCnt % itemPerPage == 0) {
+					naviLstIdx = (int)(itemTotCnt / itemPerPage);
+				} else {
+					naviLstIdx = (int)(itemTotCnt / itemPerPage) + 1;
 				}
 				
-				naviEdIdx = naviStIdx + naviSize - 1;
+				itemStIdx = itemTotCnt - (naviIdx * itemPerPage) + 1;
+				itemEdIdx = itemTotCnt - ((naviIdx - 1) * itemPerPage);
 				
-				param.setNaviStIdx(naviStIdx);
-				param.setNaviEdIdx(naviEdIdx);
-				
-			} else if (naviIdx > naviEdIdx) {
-				System.out.println("naviIdx too big");
-				
-				while(naviIdx > naviEdIdx) {
-					naviEdIdx = naviEdIdx + naviSize;
+				if(naviIdx < naviStIdx) {
+					System.out.println("naviIdx too small");
+					
+					while(naviIdx < naviStIdx) {
+						naviStIdx = naviStIdx - naviSize;
+					}
+					
+					naviEdIdx = naviStIdx + naviSize - 1;
+					
+				} else if (naviIdx > naviEdIdx) {
+					System.out.println("naviIdx too big");
+					
+					while(naviIdx > naviEdIdx) {
+						naviEdIdx = naviEdIdx + naviSize;
+					}
+					
+					naviStIdx = naviEdIdx - naviSize + 1;
+					
 				}
-				
-				naviStIdx = naviEdIdx - naviSize + 1;
 				
 				if(naviEdIdx > naviLstIdx) {
 					naviEdIdx = naviLstIdx;
 				}
-				
-				param.setNaviStIdx(naviStIdx);
-				param.setNaviEdIdx(naviEdIdx);
 			}
+			
+			param.setNaviIdx(naviIdx);
+			param.setNaviLstIdx(naviLstIdx);
+			param.setNaviStIdx(naviStIdx);
+			param.setNaviEdIdx(naviEdIdx);
+			
+			param.setItemTotCnt(itemTotCnt);
+			param.setItemStIdx(itemStIdx);
+			param.setItemEdIdx(itemEdIdx);
 			
 			bbsList = bbsDao.selectBbsListPaging(param);
 			param.setList(bbsList);
@@ -116,7 +132,7 @@ public class BbsServiceImpl implements BbsService {
 	}
 
 	@Override
-	public Map<String, Object> selectBbs(Map<String, Object> param)  throws Exception {
+	public BbsDto selectBbs(BbsPageDto param) throws Exception {
 		return bbsDao.selectBbs(param);
 	}
 

@@ -7,6 +7,9 @@ import java.util.Map;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class cmUtil {
 	
 	public static HashMap<String, Object> cvtFormData(List<Map<String, Object>> mapList) {
@@ -15,9 +18,15 @@ public final class cmUtil {
 		
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
-		for(int i = 0; i < mapList.size(); i++) {
-			item = mapList.get(i);
-			result.put(item.get("name").toString(), item.get("value"));
+		try {
+		
+			for(int i = 0; i < mapList.size(); i++) {
+				item = mapList.get(i);
+				result.put(item.get("name").toString(), item.get("value"));
+			}
+		} catch(Exception exptn) {
+			log.error("cvtFormData: exptn", exptn);
+			return null;
 		}
 		
 		return result;
@@ -32,7 +41,7 @@ public final class cmUtil {
 			int intTmp = Integer.parseInt(strTmp);
 			result = intTmp;
 		} catch(Exception exptn) {
-			exptn.printStackTrace();
+			log.error("parseInt: exptn", exptn);
 			return null;
 		}
 		
@@ -68,7 +77,23 @@ public final class cmUtil {
 			}
 		
 		} catch(Exception exptn) {
-			exptn.printStackTrace();
+			log.error("getIntParam: exptn", exptn);
+			return null;
+		}
+		
+		return result;
+	}
+	
+	public static String getParam(HashMap<String, Object> param, String key) {
+		
+		String result = null;
+		
+		try {
+			
+			result = param.containsKey(key) ? param.get(key).toString() : null;
+			
+		} catch(Exception exptn) {
+			log.error("getParam: exptn", exptn);
 			return null;
 		}
 		

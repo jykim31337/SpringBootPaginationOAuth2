@@ -25,7 +25,7 @@ public class BbsDao {
 		return sqlSession.selectList("bbsMapper.selectBbsListPaging", param);
 	}
 	
-	public Map<String, Object> selectBbs(Map<String, Object> param) throws Exception {
+	public BbsDto selectBbs(BbsPageDto param) throws Exception {
 		return sqlSession.selectOne("bbsMapper.selectBbs", param);
 	}
 	

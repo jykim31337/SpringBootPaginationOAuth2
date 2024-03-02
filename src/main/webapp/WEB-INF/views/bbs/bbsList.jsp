@@ -50,6 +50,36 @@ function movePage(ctl) {
 	}
 }
 
+<%--
+function trClick(ctl) {
+	/*
+	ctl.childNodes.forEach((node, idx) => {
+			console.log(node);
+			console.log(idx);
+		}
+	);
+	*/
+	
+	//var seq = ctl.children[0].children[0].value;
+	var seq = ctl.children.tdSeq.children.seq.value;
+	
+	console.log('seq: ' + seq);
+	
+	var detailLink = './bbsDetail?seq=' + seq;
+	location.href = detailLink;
+}
+--%>
+
+<%--
+function trClickSeq(seq) {
+	
+	console.log('seq: ' + seq);
+	
+	var detailLink = './bbsDetail?seq=' + seq;
+	location.href = detailLink;
+}
+--%>
+
 $(document).ready(function() {
 	
 	$( "#btnWrite" ).on( "click", function() {
@@ -60,6 +90,12 @@ $(document).ready(function() {
 		//window.location = "bbsList";
 		$('#frmSearch').submit();
 	});
+	
+	/*
+	$("#searchText").on('keyup', function() {
+		debugger;
+	});
+	*/
 	
 });
 
@@ -95,11 +131,41 @@ $(document).ready(function() {
 				<div class="row align-items-center justify-content-between">
 				-->
 					<div class="col">
-						<div class="input-group me-2 me-lg-3 fmxw-400">
-							<span class="input-group-text"><svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-									<path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg> </span>
-									<input type="hidden" id="searchType" name="searchType" value="${dto.searchType}"/>
-									<input type="text" id="searchText" name="searchText" value="${dto.searchText}" class="form-control" placeholder="Search Title">
+						<%--
+						<div class="input-group me-2 me-lg-3 fmxw-600">
+						--%>
+						<div class="input-group">
+							<div class="col-4 me-2 fmxw-100">
+								<select id="searchType" name="searchType" class="form-select" aria-label="Search Options">
+									<c:choose>
+										<c:when test="${dto.searchType eq 'TITLE'}">
+											<option value="TITLE" selected>Title</option>
+											<option value="CONTENT">Content</option>
+											<option value="ID">Id</option>
+										</c:when>
+										<c:when test="${dto.searchType eq 'CONTENT'}">
+											<option value="TITLE">Title</option>
+											<option value="CONTENT" selected>Content</option>
+											<option value="ID">Id</option>
+										</c:when>
+										<c:when test="${dto.searchType eq 'ID'}">
+											<option value="TITLE">Title</option>
+											<option value="CONTENT">Content</option>
+											<option value="ID" selected>Id</option>
+										</c:when>
+										<c:otherwise>
+											<option value="TITLE" selected>Title</option>
+											<option value="CONTENT">Content</option>
+											<option value="ID">Id</option>
+										</c:otherwise>
+									</c:choose>
+									
+								</select>
+							</div>
+							<div class="col-6">
+								<input type="text" id="searchText" name="searchText" value="${dto.searchText}" class="form-control" placeholder="Search Text Enter">
+							</div>
+									
 						</div>
 					</div>
 					<button id="btnRequest" name="btnRequest" class="btn btn-outline-primary col-2 mx-2" type="button">Request</button>
@@ -122,30 +188,32 @@ $(document).ready(function() {
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th class="border-gray-200">Idx</th>
+						<th class="border-gray-200 col-1">Idx</th>
 						<th class="border-gray-200">Title</th>
-						<th class="border-gray-200">Id</th>
-						<th class="border-gray-200">Date</th>
+						<th class="border-gray-200 col-1">Id</th>
+						<th class="border-gray-200 col-1">Date</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="item" items="${dto.list}" varStatus="status">
+						<%--
+						<tr onclick="trClick(this)" style="cursor:pointer;">
+						--%>
 						<tr>
-							<td style="display:none;">
+							<%--
+							<td id="tdSeq" style="display:none;">
 								<input type="hidden" id="seq" name="seq" value="${item.seq}"/>
 							</td>
+							--%>
+							<td>${item.idx}</td>
 							<td>
-								${item.idx}
+								<%--
+								<a href="javascript:void(0)" onclick="trClickSeq(${item.seq})">${item.title}</a>
+								--%>
+								<a href="./bbsDetail?seq=${item.seq}&bbsCd=${item.bbsCd}">${item.title}</a>
 							</td>
-							<td>
-								${item.title}
-							</td>
-							<td>
-								${item.usrId}
-							</td>
-							<td>
-								${item.lstDtFormatDt}
-							</td>
+							<td>${item.usrId}</td>
+							<td>${item.lstDtFormat}</td>
 						</tr>
 					</c:forEach>
 				</tbody>

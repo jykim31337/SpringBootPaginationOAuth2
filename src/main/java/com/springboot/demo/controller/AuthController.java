@@ -20,6 +20,7 @@ public class AuthController {
 	public ModelAndView loginGet(HttpServletRequest request, HttpServletResponse response, ModelAndView mav
 			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) {
 		mav.setViewName("/loginPage");
+		mav.addObject("viewPath", "Root");
 		return mav;
 	}
 	

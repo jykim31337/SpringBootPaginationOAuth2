@@ -8,19 +8,36 @@
 
 <script type="text/javascript">
 
-var isTest = true;
+var auth = "${auth}";
+var dto = "${dto}";
+var dtoSeq = "${dto.seq}";
+
+var email = "${auth.user.email}";
+var usrId = "${dto.usrId}";
+
+var isModify = false;
 
 $(document).ready(function() {
 	
-	var user = "${user}";
-	
-	if(user == null || user == '') {
-		var usrId = $('#usrId');
-		usrId.prop("placeholder", "Input Your ID");
+	if(auth == null || auth == '') {
+		$('#usrId').prop("placeholder", "Input Your ID");
+	} else if(email == usrId) {
+		isModify = true;
 	}
 
 	$( "#btnWrite" ).on( "click", function() {
-		fn_submit();
+		
+		if(isModify) {
+			this.textContent = 'Write';
+			isModify = false;
+			
+			$('#title').prop('readonly', false);
+			$('#content').prop('readonly', false);
+			
+		} else {
+			submit();
+		}
+		
 	} );
 	
 	$( "#btnCancle" ).on( "click", function() {
@@ -29,7 +46,7 @@ $(document).ready(function() {
 
 });
 
-	function fn_validation() {
+	function validation() {
 		var title = $('#title');
 		var content = $('#content');
 		var usrId = $('#usrId');
@@ -41,11 +58,11 @@ $(document).ready(function() {
 		return true;
 	}
 
-	function fn_submit() {
+	function submit() {
 
 		try {
 
-			if (!fn_validation()) {
+			if (!validation()) {
 				return;
 			}
 
@@ -69,9 +86,15 @@ $(document).ready(function() {
 				,
 				dataType : "json",
 				success : function(res) {
-					window.location = "bbsList";
+					
+					if(res.result == "ok") {
+						window.location = "bbsList";
+					} else {
+						alert(res.message); 
+					}
 				},
-				error : function(xhr) {
+				error : function(xhr, param0, param1) {
+					debugger;
 					alert(JSON.stringify(xhr));
 				}
 			});
@@ -89,39 +112,49 @@ $(document).ready(function() {
 		<jsp:include page="../template/top.jsp" />
 		<form id="frmMain" name="frmMain">
 			<section>
-				<input type="hidden" id="seq" name="seq" value="${seq}"/>
+				<input type="hidden" id="bbsCd" name="bbsCd" value="${dto.bbsCd}"/>
+				<input type="hidden" id="seq" name="seq" value="${dto.seq}"/>
 			</section>
 			<div class="col-12 mb-4 mt-4">
 				<div class="mb-4">
 					<label for="title" class="form-label">Title</label>
 					<c:choose>
-						<c:when test="${not empty user}">
-							<input id="title" name="title" type="text" class="form-control" value="${title}">
+						<c:when test="${not empty dto.seq}">
+							<input id="title" name="title" type="text" class="form-control" value="${dto.title}" readonly>
+						</c:when>
+						<c:when test="${not empty auth}">
+							<input id="title" name="title" type="text" class="form-control" value="${dto.title}">
 						</c:when>
 						<c:otherwise>
-							<input id="title" name="title" type="text" class="form-control" value="${title}" readonly>
+							<input id="title" name="title" type="text" class="form-control" value="${dto.title}" readonly>
 						</c:otherwise>
 					</c:choose>
 				</div>
 				<div class="mb-4">
 					<label for="content" class="form-label">Content</label>
 					<c:choose>
-						<c:when test="${not empty user}">
-							<textarea id="content" name="content" class="form-control" rows="10">${content}</textarea>
+						<c:when test="${not empty dto.seq}">
+							<textarea id="content" name="content" class="form-control" rows="10" readonly>${dto.content}</textarea>
+						</c:when>
+						<c:when test="${not empty auth}">
+							<textarea id="content" name="content" class="form-control" rows="10">${dto.content}</textarea>
 						</c:when>
 						<c:otherwise>
-							<textarea id="content" name="content" class="form-control" rows="10" readonly>${content}</textarea>
+							<textarea id="content" name="content" class="form-control" rows="10" readonly>${dto.content}</textarea>
 						</c:otherwise>
 					</c:choose>
 				</div>
 				<div class="mb-4">
 					<label for="usrId" class="form-label">ID</label>
 					<c:choose>
-						<c:when test="${not empty user}">
-							<input id="usrId" name="usrId" type="text" class="form-control" value="${user.email}" readonly>
+						<c:when test="${not empty dto.seq}">
+							<input id="usrId" name="usrId" type="text" class="form-control" value="${dto.usrId}" readonly>
+						</c:when>
+						<c:when test="${not empty auth}">
+							<input id="usrId" name="usrId" type="text" class="form-control" value="${dto.usrId}" readonly>
 						</c:when>
 						<c:otherwise>
-							<input id="usrId" name="usrId" type="text" class="form-control" value="${usrId}">
+							<input id="usrId" name="usrId" type="text" class="form-control" value="${dto.usrId}">
 						</c:otherwise>
 					</c:choose>
 					
@@ -129,12 +162,23 @@ $(document).ready(function() {
 				
 				<div class="table-settings mb-4 mt-4">
 					<div class="d-flex w-100 flex-wrap justify-content-end">
-						<%--
-						<input type="text" id="txtTest" name="txtTest">
-						<button id="btnTest" name="btnTest">btnTest</button>
-						--%>
-						<button id="btnWrite" name="btnWrite" class="btn btn-outline-primary col-2 me-4" type="button">Write</button>
-						<button id="btnCancle" name="btnCancle" class="btn btn-outline-primary col-2" type="button">Cancle</button>
+						<c:choose>
+							<c:when test="${not empty dto.seq}">
+								<c:choose>
+									<c:when test="${dto.usrId eq auth.user.email}">
+										<button id="btnWrite" name="btnWrite" class="btn btn-outline-primary col-2 me-4" type="button">Modify</button>
+										<button id="btnCancle" name="btnCancle" class="btn btn-outline-primary col-2" type="button">Back</button>
+									</c:when>
+									<c:otherwise>
+										<button id="btnCancle" name="btnCancle" class="btn btn-outline-primary col-2" type="button">Back</button>
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<button id="btnWrite" name="btnWrite" class="btn btn-outline-primary col-2 me-4" type="button">Write</button>
+								<button id="btnCancle" name="btnCancle" class="btn btn-outline-primary col-2" type="button">Cancle</button>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>

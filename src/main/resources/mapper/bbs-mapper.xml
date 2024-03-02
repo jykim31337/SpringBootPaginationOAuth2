@@ -19,62 +19,19 @@
 		, DEL_YN
 		, USR_ID
 		, CRE_DT
+		, CRE_DT_FORMAT
 		, CRE_DT_FORMAT_DT
 		, CRE_DT_FORMAT_TM
 		, MOD_DT
+		, MOD_DT_FORMAT
 		, MOD_DT_FORMAT_DT
 		, MOD_DT_FORMAT_TM
 		, LST_DT
+		, LST_DT_FORMAT
 		, LST_DT_FORMAT_DT
 		, LST_DT_FORMAT_TM
 		
 		/* sqlColumns end */
-		
-	</sql>
-
-	<sql id="sqlSelectBbs">
-	
-		/* sqlSelectBbs start */
-		
-		SELECT 
-			SEQ
-			, BBS_CD
-			, TITLE
-			, CONTENT
-			, UPR_SEQ
-			, RD_CNT
-			, DTH
-			, DEL_YN
-			, USR_ID
-			, CRE_DT
-			, TO_CHAR(CRE_DT, 'YYYY-MM-DD') 			AS CRE_DT_FORMAT_DT
-			, TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS CRE_DT_FORMAT_TM
-			, MOD_DT
-			, TO_CHAR(MOD_DT, 'YYYY-MM-DD') 			AS MOD_DT_FORMAT_DT
-			, TO_CHAR(MOD_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS MOD_DT_FORMAT_TM
-			, LST_DT
-			, TO_CHAR(LST_DT, 'YYYY-MM-DD') 			AS LST_DT_FORMAT_DT
-			, TO_CHAR(LST_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS LST_DT_FORMAT_TM
-		FROM 
-		(
-			SELECT
-				SEQ
-				, BBS_CD
-				, TITLE
-				, CONTENT
-				, UPR_SEQ
-				, RD_CNT
-				, DTH
-				, DEL_YN
-				, USR_ID
-				, CRE_DT
-				, MOD_DT
-				, NVL(MOD_DT, CRE_DT) AS LST_DT
-			FROM
-				TB_BBS
-		)
-		
-		/* sqlSelectBbs end */
 		
 	</sql>
 	
@@ -95,14 +52,20 @@
 				, DEL_YN
 				, USR_ID
 				, CRE_DT
-				, TO_CHAR(CRE_DT, 'YYYY-MM-DD') AS CRE_DT_FORMAT_DT
-				, TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') AS CRE_DT_FORMAT_TM
+				, CASE WHEN TO_CHAR(CRE_DT, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD') THEN TO_CHAR(CRE_DT, 'HH24:MI:SS')
+					ELSE TO_CHAR(CRE_DT, 'YYYY-MM-DD')	END AS CRE_DT_FORMAT
+				, TO_CHAR(CRE_DT, 'YYYY-MM-DD') 			AS CRE_DT_FORMAT_DT
+				, TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS CRE_DT_FORMAT_TM
 				, MOD_DT
-				, TO_CHAR(MOD_DT, 'YYYY-MM-DD') AS MOD_DT_FORMAT_DT
-				, TO_CHAR(MOD_DT, 'YYYY-MM-DD HH24:MI:SS') AS MOD_DT_FORMAT_TM
+				, CASE WHEN TO_CHAR(MOD_DT, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD') THEN TO_CHAR(MOD_DT, 'HH24:MI:SS')
+					ELSE TO_CHAR(MOD_DT, 'YYYY-MM-DD')	END AS MOD_DT_FORMAT
+				, TO_CHAR(MOD_DT, 'YYYY-MM-DD') 			AS MOD_DT_FORMAT_DT
+				, TO_CHAR(MOD_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS MOD_DT_FORMAT_TM
 				, LST_DT
-				, TO_CHAR(LST_DT, 'YYYY-MM-DD') AS LST_DT_FORMAT_DT
-				, TO_CHAR(LST_DT, 'YYYY-MM-DD HH24:MI:SS') AS LST_DT_FORMAT_TM
+				, CASE WHEN TO_CHAR(LST_DT, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD') THEN TO_CHAR(LST_DT, 'HH24:MI:SS')
+					ELSE TO_CHAR(LST_DT, 'YYYY-MM-DD')	END AS LST_DT_FORMAT
+				, TO_CHAR(LST_DT, 'YYYY-MM-DD') 			AS LST_DT_FORMAT_DT
+				, TO_CHAR(LST_DT, 'YYYY-MM-DD HH24:MI:SS') 	AS LST_DT_FORMAT_TM
 			FROM 
 			(
 				SELECT
@@ -121,7 +84,8 @@
 				FROM
 					TB_BBS
 				WHERE 1=1
-				AND BBS_CD = 'NONE'
+				AND BBS_CD = #{bbsCd}
+				<include refid="sqlSearch"/>
 			)
 		)
 		
@@ -132,12 +96,15 @@
 	
 		/* sqlSearch start */
 	
-		<if test="searchText != null and searchText != ''">
-			<if test="searchType != null and searchType != '' and searchType == 'TITLE'">
+		<if test="searchText != null and searchText != '' and searchType != null and searchType != ''">
+			<if test="searchType == 'TITLE'">
 				AND TITLE LIKE '%' || #{searchText} || '%'
 			</if>
-			<if test="searchType != null and searchType != '' and searchType == 'CONTENT'">
-				AND TITLE LIKE '%' || #{searchText} || '%'
+			<if test="searchType == 'CONTENT'">
+				AND CONTENT LIKE '%' || #{searchText} || '%'
+			</if>
+			<if test="searchType == 'ID'">
+				AND USR_ID LIKE '%' || #{searchText} || '%'
 			</if>
 		</if>
 		
@@ -149,9 +116,12 @@
 	
 		/* selectBbsListCount start */
 		
-		<include refid="sqlVWBbs"></include>
+		<include refid="sqlVWBbs"/>
 		
 		SELECT COUNT(*) AS CNT FROM VW_BBS
+		WHERE 1=1
+		
+		<include refid="sqlSearch"/>
 		
 		/* selectBbsListCount end */
 		
@@ -161,15 +131,16 @@
 	
 		/* selectBbsListPaging start */
 		
-		<include refid="sqlVWBbs"></include>
+		<include refid="sqlVWBbs"/>
 		
 		SELECT
 		
-		<include refid="sqlColumns"></include>
+		<include refid="sqlColumns"/>
 		
-		FROM VW_BBS
-		
+		FROM VW_BBS 
 		WHERE 1 = 1
+		
+		<include refid="sqlSearch"/>
 
 		AND IDX BETWEEN #{itemStIdx} AND #{itemEdIdx}
 		
@@ -179,15 +150,15 @@
 		
 	</select>
 	
-	<select id="selectBbs" parameterType="java.util.Map" resultType="CamelMap">
+	<select id="selectBbs" parameterType="com.springboot.demo.dto.BbsPageDto" resultType="com.springboot.demo.dto.BbsDto">
 	
 		/* selectBbs start */
 			
-		<include refid="sqlVWBbs"></include>
+		<include refid="sqlVWBbs"/>
 		
 		SELECT 
 		
-		<include refid="sqlColumns"></include>
+		<include refid="sqlColumns"/>
 		
 		FROM VW_BBS
 		
@@ -274,7 +245,9 @@
 			, CONTENT = #{content}
 			, MOD_DT = SYSDATE
 		WHERE
-			SEQ = #{seq}
+			1 = 1
+			AND SEQ = #{seq}
+			AND USR_ID = #{usrId}
 		
 		/* updateBbs end */
 		
