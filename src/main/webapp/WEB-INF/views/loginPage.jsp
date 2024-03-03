@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<jsp:include page="./template/common${viewPath}.jsp" />
+<jsp:include page="./template/common.jsp" />
 
 <script type="text/javascript">
 
