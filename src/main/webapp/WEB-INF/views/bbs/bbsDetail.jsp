@@ -94,7 +94,6 @@ $(document).ready(function() {
 					}
 				},
 				error : function(xhr, param0, param1) {
-					debugger;
 					alert(JSON.stringify(xhr));
 				}
 			});
@@ -108,8 +107,9 @@ $(document).ready(function() {
 <title>BBS DETAIL</title>
 </head>
 <body>
-	<div class="container">
-		<jsp:include page="../template/top.jsp" />
+	<jsp:include page="../template/top.jsp" />
+	<jsp:include page="../template/left.jsp" />
+	<main class="content">
 		<form id="frmMain" name="frmMain">
 			<section>
 				<input type="hidden" id="bbsCd" name="bbsCd" value="${dto.bbsCd}"/>
@@ -183,6 +183,7 @@ $(document).ready(function() {
 				</div>
 			</div>
 		</form>
-	</div>
+		<jsp:include page="../template/bottom.jsp" />
+	</main>
 </body>
 </html>

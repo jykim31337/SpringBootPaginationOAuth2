@@ -18,8 +18,20 @@ $(document).ready(function() {
 <title>INFO</title>
 </head>
 <body>
-	infoPage.jsp<br>
-	<img src="${picture}"/><br>
-	Only User
+	<jsp:include page="../template/top.jsp" />
+	<jsp:include page="../template/left.jsp" />
+	<main class="content">
+		<div style="min-height:80vh;">
+			<h1>INFO</h1><br>
+			ROLE_USER ONLY<br>
+			<br>
+			<br>
+			<br>
+			<img src="${auth.user.picture}"/><br>
+			<p>${auth.user.email}</p>
+			
+		</div>
+		<jsp:include page="../template/bottom.jsp" />	
+	</main>
 </body>
 </html>

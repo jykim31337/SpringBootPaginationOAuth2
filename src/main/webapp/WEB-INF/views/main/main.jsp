@@ -1,12 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<jsp:include page="../template/common.jsp" />
+
+<title>MAIN</title>
 </head>
 <body>
-	<h1>main</h1>      
+	<jsp:include page="../template/top.jsp" />
+	<jsp:include page="../template/left.jsp" />
+	<main class="content">
+		<div style="min-height:80vh;">
+			<h1>MAIN</h1>
+		</div>
+		<jsp:include page="../template/bottom.jsp" />	
+	</main>
 </body>
 </html>

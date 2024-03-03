@@ -25,7 +25,7 @@ public class SecurityConfig {
 		.cors(cors -> cors.disable())
 		.authorizeRequests(
 			requests -> requests
-			.antMatchers("/user/**", "/admin/**", "/main/**").authenticated()
+			.antMatchers("/user/**", "/admin/**").authenticated()
 			
 			.antMatchers("/admin/**").hasAnyRole("ADMIN") // ROLE_ADMIN
 			//.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
@@ -36,8 +36,9 @@ public class SecurityConfig {
 			.anyRequest().permitAll()
 		).oauth2Login(
 			login -> login
-			.loginPage("/loginGet")
-			.defaultSuccessUrl("/user/infoGet")
+			//.loginPage("/login")
+			//.loginPage("/oauth2/authorization/google")
+			//.defaultSuccessUrl("/user/info")
 			.userInfoEndpoint()
 			.userService(oAuth2MemberService).and()
 		);

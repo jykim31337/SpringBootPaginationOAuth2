@@ -1,4 +1,9 @@
 <!-- commonTemplate.jsp start -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<spring:eval var="contextPath" expression="@environment.getProperty('context.path')" />
 
 <style>
 .disabled {
@@ -17,13 +22,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/icons8-whale-square-laces-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon/icons8-whale-square-laces-16.png">
 -->
-<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/favicon-redblack-32.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/${contextPath}/img/favicon/favicon-redblack-32.png">
 
-<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-<link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="/${contextPath}/vendor/bootstrap/js/bootstrap.min.js"></script>
+<link href="/${contextPath}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<script src="../vendor/jquery/js/jquery-3.7.1.min.js"/></script>
-<script src="../js/cmutil.js"/></script>
+<script src="/${contextPath}/vendor/jquery/js/jquery-3.7.1.min.js"/></script>
+<script src="/${contextPath}/js/cmutil.js"/></script>
 
 <!-- Sweet Alert -->
 <!--
@@ -36,7 +41,7 @@
 -->
 
 <!-- Volt CSS -->
-<link type="text/css" href="../vendor/volt-v1.4.1/css/volt.css" rel="stylesheet">
+<link type="text/css" href="/${contextPath}/vendor/volt-v1.4.1/css/volt.css" rel="stylesheet">
 
 
 

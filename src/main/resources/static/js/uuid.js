@@ -115,7 +115,6 @@ function uuid_explain() {
 		if(replaceChar == 'x') {
 			v = r;
 		} else {
-			debugger;
 			v = (r & 0x3 | 0x8);
 		}
 		

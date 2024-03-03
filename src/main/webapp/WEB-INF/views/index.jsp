@@ -1,11 +1,10 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 
 <html>
 <head>
 <meta charset="UTF-8">
-<jsp:include page="./template/commonRoot.jsp" />
+<jsp:include page="./template/common.jsp" />
 
 <script type="text/javascript">
 
@@ -17,16 +16,16 @@ $(document).ready(function() {
 </script>
 
 <title>INDEX</title>
+
 </head>
 <body>
-	<a href="./bbs/bbsList">/bbs/bbsList</a><br>
-	<a href="./bbs/bbsWrite">/bbs/bbsWrite</a><br>
-	<br>
-	<a href="./admin/manageGet">/admin/manageGet</a><br>
-	<a href="./user/infoGet">/user/infoGet</a><br>
-	<br>
-	<a href="loginGet">loginGet</a><br>
-	<br>
-	<a href="logout">logout</a><br>
+	<jsp:include page="./template/top.jsp" />
+	<jsp:include page="./template/left.jsp" />
+	<main class="content">
+		<div style="min-height:80vh;">
+			<h1>INDEX</h1>
+		</div>
+		<jsp:include page="./template/bottom.jsp" />	
+	</main>
 </body>
 </html>

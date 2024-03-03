@@ -1,5 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
 <html>
@@ -18,7 +16,15 @@ $(document).ready(function() {
 <title>MANAGE PAGE</title>
 </head>
 <body>
-	managePage.jsp<br>
-	Only Admin
+	<jsp:include page="../template/top.jsp" />
+	<jsp:include page="../template/left.jsp" />
+	<main class="content">
+		<div style="min-height:80vh;">
+			<h1>MANAGE</h1>
+			<br>
+			ROLE_ADMIN ONLY
+		</div>
+		<jsp:include page="../template/bottom.jsp" />	
+	</main>
 </body>
 </html>

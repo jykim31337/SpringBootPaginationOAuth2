@@ -8,15 +8,11 @@
 
 <script type="text/javascript">
 
-debugger;
-
 </script>
 
 <jsp:include page="./template/common${viewPath}.jsp" />
 
 <script type="text/javascript">
-
-debugger;
 
 $(document).ready(function() {
 	var date = new Date();
