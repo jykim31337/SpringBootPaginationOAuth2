@@ -8,10 +8,10 @@
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/log/demo.log</file>
+		<file>/log/SpringBootPaginationOAuth2/demo.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>/log/demo-%d{yyyy-MM-dd}.log</fileNamePattern>
-			<maxHistory>50</maxHistory>
+			<fileNamePattern>/log/SpringBootPaginationOAuth2/demo-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 
 		<encoder>
