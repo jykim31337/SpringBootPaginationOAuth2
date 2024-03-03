@@ -10,7 +10,7 @@
 
 </script>
 
-<jsp:include page="./template/common${viewPath}.jsp" />
+<jsp:include page="./template/common.jsp" />
 
 <script type="text/javascript">
 
