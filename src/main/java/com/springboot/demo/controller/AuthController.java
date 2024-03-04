@@ -16,6 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthController {
 
+	@GetMapping("/")
+	public ModelAndView index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav
+			, @AuthenticationPrincipal OAuth2UserExt oAuth2User) {
+		
+		mav.setViewName("/index");
+		mav.addObject("auth", oAuth2User);
+		
+		return mav;
+	}
+	
 	/*
 	@GetMapping("/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mav

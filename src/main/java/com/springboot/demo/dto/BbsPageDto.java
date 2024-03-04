@@ -4,29 +4,6 @@ import java.util.List;
 
 public class BbsPageDto {
 	
-	/*
-	public enum SearchType {
-		
-		TITLE("TITLE")
-		, CONTENT("CONTENT")
-		, ID("ID")
-		, NAME("NAME");
-
-		private String searchType;
-		
-		SearchType(String searchType) {
-			this.searchType = searchType;
-		}
-
-		public String getSearchType() {
-			return searchType;
-		}
-
-		public void setSearchType(String searchType) {
-			this.searchType = searchType;
-		}
-	}*/
-	
 	private String searchType;
 	private String searchText;
 	
