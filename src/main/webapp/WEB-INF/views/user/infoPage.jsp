@@ -21,7 +21,7 @@ $(document).ready(function() {
 	<jsp:include page="../template/top.jsp" />
 	<jsp:include page="../template/left.jsp" />
 	<main class="content">
-		<div style="min-height:80vh;">
+		<div style="min-height:80vh;" class="mt-4">
 			<h1>INFO</h1><br>
 			ROLE_USER ONLY<br>
 			<br>

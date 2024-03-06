@@ -22,7 +22,7 @@ $(document).ready(function() {
 	<jsp:include page="./template/top.jsp" />
 	<jsp:include page="./template/left.jsp" />
 	<main class="content">
-		<div style="min-height:80vh;">
+		<div style="min-height:80vh;" class="mt-4">
 			<h1>INDEX</h1>
 			Fix to give ROLE_ADMIN permission to the account if the google id has a
 			<br>

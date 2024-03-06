@@ -10,7 +10,7 @@
 	<jsp:include page="../template/top.jsp" />
 	<jsp:include page="../template/left.jsp" />
 	<main class="content">
-		<div style="min-height:80vh;">
+		<div style="min-height:80vh;" class="mt-4">
 			<h1>MAIN</h1>
 		</div>
 		<jsp:include page="../template/bottom.jsp" />	
