@@ -24,6 +24,9 @@ $(document).ready(function() {
 	<main class="content">
 		<div style="min-height:80vh;">
 			<h1>INDEX</h1>
+			Fix to give ROLE_ADMIN permission to the account if the google id has a
+			<br>
+			case-insensitive "admin" string
 		</div>
 		<jsp:include page="./template/bottom.jsp" />	
 	</main>
