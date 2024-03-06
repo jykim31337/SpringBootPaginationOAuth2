@@ -53,7 +53,8 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
 			
 			String email = oAuth2User.getAttribute("email");
 
-			if(email.contentEquals(googleAdminEmail)) {
+			if(email.contentEquals(googleAdminEmail) ||
+					email.toUpperCase().contains("ADMIN")) {
 				GrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
 				grantList.add(roleAdmin);
 			}
