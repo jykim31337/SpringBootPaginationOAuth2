@@ -9,15 +9,35 @@
 		<div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
 			<div class="d-flex align-items-center">
 				<div class="avatar-lg me-4">
-					<img src="/${contextPath}/vendor/volt-v1.4.1/assets/img/team/profile-picture-3.jpg" class="card-img-top rounded-circle border-white"
-						alt="Bonnie Green">
+					<%--
+					<img src="/${contextPath}/vendor/volt-v1.4.1/assets/img/team/profile-picture-3.jpg" class="card-img-top rounded-circle border-white" alt="Bonnie Green">
+					--%>
+					<c:choose>
+						<c:when test="${not empty auth}">
+							<img src="${auth.user.picture}" class="card-img-top rounded-circle border-white">
+						</c:when>
+						<c:otherwise>
+							<img src="/${contextPath}/img/etc/OIG3.png" class="card-img-top rounded-circle border-white">
+						</c:otherwise>
+					</c:choose>
 				</div>
 				<div class="d-block">
-					<h2 class="h5 mb-3">Hi, Jane</h2>
-					<a href="/${contextPath}/vendor/volt-v1.4.1/pages/examples/sign-in.html" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
-						<svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>						
-						Sign Out
-					</a>
+					<c:choose>
+						<c:when test="${not empty auth}">
+							<h2 class="h5 mb-3">Hi! ${auth.user.email}</h2>
+							<a href="/${contextPath}/logout" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+								<svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>						
+								LOGOUT
+							</a>
+						</c:when>
+						<c:otherwise>
+							<h2 class="h5 mb-3">Hi!</h2>
+							<a href="/${contextPath}/oauth2/authorization/google" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+								<svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>						
+								LOGIN
+							</a>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 			<div class="collapse-close d-md-none">
