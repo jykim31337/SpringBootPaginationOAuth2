@@ -27,7 +27,7 @@
 <script src="/${contextPath}/vendor/bootstrap/js/bootstrap.min.js"></script>
 <link href="/${contextPath}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<script src="/${contextPath}/vendor/jquery/js/jquery-3.7.1.min.js"/></script>
+<script src="/${contextPath}/vendor/jquery/jquery-3.7.1.min.js"></script>
 <script src="/${contextPath}/js/cmutil.js"/></script>
 
 <!-- Sweet Alert -->
